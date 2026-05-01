@@ -6,6 +6,7 @@ import time
 
 folder_path = os.environ['FOLDER_PATH']
 
+c, conn = None, None
 for attempt in range(5, 0, -1):
     try:
         c, conn = connection()
@@ -14,6 +15,10 @@ for attempt in range(5, 0, -1):
     except Exception as e:
         print(f"failed to connect due to {type(e)}, {attempt} retries left")
         time.sleep(5)
+
+if c is None or conn is None:
+    print("Failed to establish database connection after 5 attempts. Exiting.")
+    exit(1)
 
 while True:
     try:
@@ -45,4 +50,5 @@ while True:
     # Sleep for 5 seconds
     time.sleep(5)
 
-conn.close()
+if conn:
+    conn.close()
